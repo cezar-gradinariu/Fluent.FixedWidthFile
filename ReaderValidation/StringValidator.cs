@@ -23,10 +23,11 @@ namespace ReaderValidation
         {
             var temp = _source ?? string.Empty;
             var nextIndex = _currentIndex + (int) count;
-            if (nextIndex > (temp == null ? 0 : temp.Length))
+            if (nextIndex > (temp?.Length ?? 0))
             {
                 temp = temp.PadRight(nextIndex, ' ');
             }
+
             var segmentValue = temp.Substring(_currentIndex, (int) count);
             _currentIndex = nextIndex;
             return new Segment(this, segmentValue, segmentName);
@@ -38,6 +39,7 @@ namespace ReaderValidation
             {
                 _error.Message = string.Format("The line is expected to have exactly {0} characters", expectedLength);
             }
+
             return this;
         }
 
@@ -48,6 +50,7 @@ namespace ReaderValidation
                 _error.Message = string.Format("The line is expected to have between {0} and {1} characters", minLength,
                     maxLength);
             }
+
             return this;
         }
 

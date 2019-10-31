@@ -36,25 +36,25 @@ namespace FluentWriter
 
         public FluentWriter NewField(decimal? value, string format = "N2")
         {
-            var formatted = value == null ? null : value.Value.ToString(format);
+            var formatted = value?.ToString(format);
             return NewField(formatted, null);
         }
 
         public FluentWriter NewField(decimal? value, Action<FieldWriter> func, string format = "N2")
         {
-            var formatted = value == null ? null : value.Value.ToString(format);
+            var formatted = value?.ToString(format);
             return NewField(formatted, func);
         }
 
         public FluentWriter NewField(DateTime? value, string format = "dd/MM/yy")
         {
-            var formatted = value == null ? null : value.Value.ToString(format);
+            var formatted = value?.ToString(format);
             return NewField(formatted, null);
         }
 
         public FluentWriter NewField(DateTime? value, Action<FieldWriter> func, string format = "dd/MM/yy")
         {
-            var formatted = value == null ? null : value.Value.ToString(format);
+            var formatted = value?.ToString(format);
             return NewField(formatted, func);
         }
 
@@ -65,6 +65,7 @@ namespace FluentWriter
                 _builder.Append(value ?? string.Empty);
                 return this;
             }
+
             var fieldWriter = new FieldWriter(this, _builder, value);
             func(fieldWriter);
             fieldWriter.Close();
@@ -126,6 +127,7 @@ namespace FluentWriter
                 {
                     _field = _field.Substring(_field.Length - (int) count, (int) count);
                 }
+
                 return this;
             }
 
@@ -135,6 +137,7 @@ namespace FluentWriter
                 {
                     _field = _field.Substring(0, (int) count);
                 }
+
                 return this;
             }
 
@@ -162,10 +165,8 @@ namespace FluentWriter
                 {
                     return this;
                 }
-                foreach (var remove in toRemove)
-                {
-                    _field = _field.Replace(remove + "", "");
-                }
+
+                foreach (var remove in toRemove) _field = _field.Replace(remove + "", "");
                 return this;
             }
 

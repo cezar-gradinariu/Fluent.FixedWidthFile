@@ -9,9 +9,6 @@ namespace FluentReader
         public string Message { get; set; }
         public List<SegmentError> SegmentErrors { get; set; }
 
-        public bool HasErrors
-        {
-            get { return SegmentErrors != null && SegmentErrors.Any(); }
-        }
+        public bool HasErrors => SegmentErrors != null && SegmentErrors.Any();
     }
 }

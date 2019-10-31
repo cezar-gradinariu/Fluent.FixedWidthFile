@@ -21,7 +21,7 @@ namespace FluentReader
             ReaderResult = new FluentReaderResult<T>();
         }
 
-        private FluentReaderResult<T> ReaderResult { get; set; }
+        private FluentReaderResult<T> ReaderResult { get; }
 
         public FluentReader<T> Set<TU>(Expression<Func<T, TU>> property, Action<FieldReader<TU>> action,
             string useExactFormat = null)
@@ -32,9 +32,10 @@ namespace FluentReader
             if (result.HasErrors)
             {
                 ReaderResult.LineError.SegmentErrors.Add(new SegmentError(result.ValueToConvert, string.Format(
-                    "Could not convert {0} to type {1}", result.ValueToConvert, typeof (TU).Name), property.Name));
+                    "Could not convert {0} to type {1}", result.ValueToConvert, typeof(TU).Name), property.Name));
                 return this;
             }
+
             SetPropertyValue(property, result.Result);
             return this;
         }
@@ -56,6 +57,7 @@ namespace FluentReader
                 ReaderResult.Result = _result;
                 ReaderResult.LineError = null;
             }
+
             return ReaderResult;
         }
 
@@ -66,6 +68,7 @@ namespace FluentReader
             {
                 return;
             }
+
             var property = memberSelectorExpression.Member as PropertyInfo;
             if (property != null)
             {

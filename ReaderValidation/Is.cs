@@ -115,6 +115,7 @@ namespace ReaderValidation
             {
                 return @is => null;
             }
+
             return @is => @is._value != null && values.ToList().Contains(@is._value)
                 ? null
                 : new SegmentError(@is._value,
@@ -129,6 +130,7 @@ namespace ReaderValidation
             {
                 return @is => new SegmentError(@is._value, "Regex expression must be provided!", @is._segmentName);
             }
+
             return @is => @is._value != null && Regex.IsMatch(@is._value, regex)
                 ? null
                 : new SegmentError(@is._value,

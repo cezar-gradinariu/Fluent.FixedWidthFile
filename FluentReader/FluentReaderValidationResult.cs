@@ -12,16 +12,14 @@ namespace FluentReader
             {
                 throw new ArgumentNullException("errors");
             }
+
             Errors = errors;
             SourceLine = sourceLine;
         }
 
-        public List<string> Errors { get; private set; }
-        public string SourceLine { get; private set; }
+        public List<string> Errors { get; }
+        public string SourceLine { get; }
 
-        public bool HasErrors
-        {
-            get { return Errors != null && Errors.Any(); }
-        }
+        public bool HasErrors => Errors != null && Errors.Any();
     }
 }

@@ -14,7 +14,7 @@ namespace Validation
             ValidationResults = new List<ValidationResult>();
         }
 
-        private List<ValidationResult> ValidationResults { get; set; }
+        private List<ValidationResult> ValidationResults { get; }
 
         public Validation<T> IsRequired(Expression<Func<T, string>> e)
         {
@@ -42,6 +42,7 @@ namespace Validation
             {
                 AddError(e.PropertyName(), message);
             }
+
             return this;
         }
 
