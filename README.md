@@ -62,7 +62,60 @@ I would like to see if the line is valid and, if it is valid I would like to des
         }
 ```
 
-
 ## Writing
 
+```csharp
+        [Test]
+        public void ShouldCorrectlyWriteTheLine()
+        {
+            var ship = new Ship
+            {
+                Name = "ElizabethII",
+                Age = 50,
+                FirstVoyage = new DateTime(1950, 5,1),
+                CargoWeight = null,
+                RegistrationNumber = 120000,
+                Speed = null,
+                CrewSize = null, 
+                RecyclingDate = null,
+                DeadWeight = 2000
+            };
+            var line  = _writer
+                .NewField(ship.Name, writer => writer.TakeFirst(14).LeftJustify(14))
+                .NewField(ship.RegistrationNumber, writer => writer.TakeFirst(6).RightJustify(6), "F0")
+                .NewField(ship.CrewSize, writer => writer.TakeFirst(3).RightJustify(3), "F0")
+                .FillWith(' ', 2)
+                .NewField(ship.DeadWeight, writer => writer.TakeFirst(5).RightJustify(5, '0'), "F0")
+                .NewField(ship.CargoWeight, writer => writer.TakeFirst(6).RightJustify(6, ' '), "D0")
+                .NewField(ship.FirstVoyage, writer => writer.RightJustify(10), "dd.MM.yyyy" )
+                .NewField(ship.RecyclingDate, writer => writer.RightJustify(10), "dd.MM.yyyy")
+                .NewField(ship.Age, writer => writer.TakeFirst(2).RightJustify(2), "F0")
+                .NewField(ship.Speed, writer => writer.TakeFirst(2).RightJustify(2), "F0")
+                .FillWith(' ', 6)
+                .Read();
 
+            const string expected = "ElizabethII   120000     02000      01.05.1950          50        ";
+            Assert.AreEqual(expected, line);
+        }
+```
+
+## Line Text Validation
+
+```csharp
+        [Test]
+        public void ValidateWithNoErrors()
+        {
+            const string detail = " 2Einstein    Albert     01/01/78  25000.50";
+            var validatorResult = new StringValidator(detail)
+                .CheckLengthRange(35, 44)
+                .ForNext(2, "Street number").ExpectThat(Is.Valued, Is.Long)
+                .ForNext(12, "Surname").ExpectThat(Is.Valued)
+                .ForNext(11, "First Name/Initial").ExpectThat(Is.Optional)
+                .ForNext(8, "Birthday").ExpectThat(Is.Valued, Is.DateTime("dd/MM/yy"))
+                .ForNext(2, "Filler").ExpectThat(Is.EqualTo(new string(' ', 2)))
+                .ForNext(9, "Monthly income").ExpectThat(Is.Valued, Is.Decimal)
+                .Read();
+
+            Assert.IsFalse(validatorResult.HasErrors);
+        }
+```
