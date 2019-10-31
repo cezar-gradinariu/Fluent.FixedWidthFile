@@ -26,7 +26,7 @@ namespace ReaderValidation.Tests
         [Test]
         public void ValidateWithNoErrors()
         {
-            const string detail = " 2Gradinariu  Cezar      01/01/78  25000.50";
+            const string detail = " 2Einstein    Albert     01/01/78  25000.50";
             var validatorResult = new StringValidator(detail)
                 .CheckLengthRange(35, 44)
                 .ForNext(2, "Street number").ExpectThat(Is.Valued, Is.Long)

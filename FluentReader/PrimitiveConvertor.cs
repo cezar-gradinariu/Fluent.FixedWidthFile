@@ -73,48 +73,57 @@ namespace FluentReader
 
         internal PrimitiveConvertorResult<TU> Convert(string source, string exactFormat = null)
         {
-            var type = typeof (TU);
-            var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
-            if (type == typeof (string))
+            var type = typeof(TU);
+            var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            if (type == typeof(string))
             {
                 return AsString(source);
             }
-            if (type == typeof (int))
+
+            if (type == typeof(int))
             {
                 return AsInt(source);
             }
-            if (type == typeof (decimal))
+
+            if (type == typeof(decimal))
             {
                 return AsDecimal(source);
             }
-            if (type == typeof (ulong))
+
+            if (type == typeof(ulong))
             {
                 return AsUnsignedLong(source);
             }
-            if (type == typeof (DateTime))
+
+            if (type == typeof(DateTime))
             {
                 return AsDateTime(source, exactFormat);
             }
+
             if (isNullable)
             {
                 type = Nullable.GetUnderlyingType(type);
-                if (type == typeof (int))
+                if (type == typeof(int))
                 {
                     return AsNullableInt(source);
                 }
-                if (type == typeof (decimal))
+
+                if (type == typeof(decimal))
                 {
                     return AsNullableDecimal(source);
                 }
-                if (type == typeof (ulong))
+
+                if (type == typeof(ulong))
                 {
                     return AsNullableUnsignedLong(source);
                 }
-                if (type == typeof (DateTime))
+
+                if (type == typeof(DateTime))
                 {
                     return AsNullableDateTime(source, exactFormat);
                 }
             }
+
             throw new NotImplementedException("The convertor for this type is not implemented!");
         }
     }

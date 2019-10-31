@@ -14,11 +14,25 @@ namespace FluentWriter.Tests
 
         private FluentWriter _writer;
 
+        private class Ship
+        {
+            public string Name { get; set; }
+            public int RegistrationNumber { get; set; }
+            public int? CrewSize { get; set; }
+            public decimal DeadWeight { get; set; }
+            public decimal? CargoWeight { get; set; }
+            public DateTime FirstVoyage { get; set; }
+            public DateTime? RecyclingDate { get; set; }
+
+            public ulong Age { get; set; }
+            public ulong? Speed { get; set; }
+        }
+
         [Test]
         public void ShouldAdd10Characters()
         {
             var x = _writer.FillWith('a', 10).Read();
-            Assert.AreEqual(new String('a', 10), x);
+            Assert.AreEqual(new string('a', 10), x);
         }
 
         [Test]
@@ -33,6 +47,39 @@ namespace FluentWriter.Tests
         {
             var x = _writer.NewLine().Read();
             Assert.AreEqual(Environment.NewLine, x);
+        }
+
+        [Test]
+        public void ShouldCorrectlyWriteTheLine()
+        {
+            var ship = new Ship
+            {
+                Name = "ElizabethII",
+                Age = 50,
+                FirstVoyage = new DateTime(1950, 5, 1),
+                CargoWeight = null,
+                RegistrationNumber = 120000,
+                Speed = null,
+                CrewSize = null,
+                RecyclingDate = null,
+                DeadWeight = 2000
+            };
+            var line = _writer
+                .NewField(ship.Name, writer => writer.TakeFirst(14).LeftJustify(14))
+                .NewField(ship.RegistrationNumber, writer => writer.TakeFirst(6).RightJustify(6), "F0")
+                .NewField(ship.CrewSize, writer => writer.TakeFirst(3).RightJustify(3), "F0")
+                .FillWith(' ', 2)
+                .NewField(ship.DeadWeight, writer => writer.TakeFirst(5).RightJustify(5, '0'), "F0")
+                .NewField(ship.CargoWeight, writer => writer.TakeFirst(6).RightJustify(6), "D0")
+                .NewField(ship.FirstVoyage, writer => writer.RightJustify(10), "dd.MM.yyyy")
+                .NewField(ship.RecyclingDate, writer => writer.RightJustify(10), "dd.MM.yyyy")
+                .NewField(ship.Age, writer => writer.TakeFirst(2).RightJustify(2), "F0")
+                .NewField(ship.Speed, writer => writer.TakeFirst(2).RightJustify(2), "F0")
+                .FillWith(' ', 6)
+                .Read();
+
+            const string expected = "ElizabethII   120000     02000      01.05.1950          50        ";
+            Assert.AreEqual(expected, line);
         }
 
         [Test]

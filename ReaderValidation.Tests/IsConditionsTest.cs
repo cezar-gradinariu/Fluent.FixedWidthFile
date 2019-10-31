@@ -108,6 +108,7 @@ namespace ReaderValidation.Tests
                 Assert.IsNull(result);
                 return;
             }
+
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Message);
             Assert.AreEqual(sampleValue, result.Source);
